@@ -33,9 +33,6 @@ def run_game():
 
 
 if __name__ == "__main__":
-    # Initialising the pygame module
-    pygame.init()
-
     # Declaring the Game Manager
     gameManager = GameManager.GameManager()
 

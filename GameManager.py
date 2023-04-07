@@ -6,6 +6,9 @@ import pygame
 
 class GameManager:
     def __init__(self):
+        # Initialising the pygame module
+        pygame.init()
+
         # Screen Width and Height
         self.screen_width = 500
         self.screen_height = 600
