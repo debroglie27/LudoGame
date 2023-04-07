@@ -5,6 +5,9 @@ import GameManager
 def run_game():
     run = True
     while run:
+        # Reducing the Frames/second
+        pygame.time.delay(100)
+
         # If any event occurs
         for event in pygame.event.get():
             # Clicking the Close Button on window

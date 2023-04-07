@@ -27,7 +27,7 @@ class GameManager:
         self.game_over = False
 
         # Delay (in ms)
-        self.delay = 1500
+        self.delay = 1400
 
         # Initialising the Board Class
         self.board = BoardClass.Board(self.win, self.screen_width, self.screen_height)
