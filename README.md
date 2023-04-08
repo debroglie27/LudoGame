@@ -17,7 +17,7 @@ This is how the App looks.
 * **BoardClass.py:** Manages the display of the board, loading of players and maintaining tne current status.
 * **DiceClass.py:** Manages the dice images, their box colliders and rolling of dice.
 * **PathClass.py:** Manages the path of every red, green, yellow and blue discs.
-* **BinaryImages.py:** Contains the binary string images
+* **BinaryImages.py:** Contains the images in binary string format.
 
 ---
 ### THE END

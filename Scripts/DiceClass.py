@@ -1,5 +1,5 @@
-import io
-import base64
+from io import BytesIO
+from base64 import b64decode
 import pygame
 import random
 from BinaryImages import dice_binary_images
@@ -28,7 +28,7 @@ class Dice:
         dice_img_list = []
         for dice_binary_img in dice_binary_images:
             # Decoding the Binary Image
-            decoded_dice_img = io.BytesIO(base64.b64decode(dice_binary_img))
+            decoded_dice_img = BytesIO(b64decode(dice_binary_img))
             # Loading a image
             dice_img = pygame.image.load(decoded_dice_img)
             # Resizing the Image

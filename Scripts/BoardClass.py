@@ -1,5 +1,5 @@
-import io
-import base64
+from io import BytesIO
+from base64 import b64decode
 import pygame
 import PlayerClass
 from BinaryImages import star
@@ -49,7 +49,7 @@ class Board:
     @staticmethod
     def load_star_img():
         # Decoding the Star Binary Image which is imported from BinaryImages.py
-        decoded_img = io.BytesIO(base64.b64decode(star))
+        decoded_img = BytesIO(b64decode(star))
         # Loading the star image
         img = pygame.image.load(decoded_img)
         # Resizing the Star Image
