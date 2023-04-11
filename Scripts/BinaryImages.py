@@ -11,8 +11,12 @@ star = b'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABhGlDQ1BJQ0MgcHJvZmlsZQA
 dice_binary_images = [dice_roll, dice1, dice2, dice3, dice4, dice5, dice6]
 
 
+# ****** HOW TO MAKE A .exe FILE ******
+# pyinstaller -F --noconsole main.py --name Ludo
+
 # RUN the below code in another python file and
 # change the image path and image name accordingly
+# to create a python file which includes your images as binary strings
 
 # import base64
 #
