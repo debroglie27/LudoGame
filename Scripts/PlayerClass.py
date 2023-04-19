@@ -31,9 +31,33 @@ class Player:
 
         return False
 
-    def check_disc_movements(self, dice_roll_val):
+    def check_all_player_discs_reached_home(self):
         for disc in self.discs:
-            if disc.movement and (disc.current_id + dice_roll_val) <= disc.max_current_id:
+            if disc.current_index != disc.max_current_index:
+                return False
+
+        return True
+
+    def check_any_disc_moves_possible(self, dice_roll_val):
+        # Bool value representing whether any disc, for that particular player, is at starting position
+        anyDiscAtStart = self.check_any_disc_at_start()
+        # Bool value representing whether any disc, for that particular player, can move or not
+        anyDiscWhichCanMove = self.check_any_disc_can_move(dice_roll_val)
+
+        if (dice_roll_val == 6 and anyDiscAtStart) or anyDiscWhichCanMove:
+            return True
+        else:
+            return False
+
+    def check_any_disc_can_move(self, dice_roll_val: int) -> bool:
+        """
+        :param dice_roll_val:
+        :return bool:
+        returns True if any player discs has 'movement' bool variable
+        as True and the disc has area to move to, otherwise returns False.
+        """
+        for disc in self.discs:
+            if disc.movement and (disc.current_index + dice_roll_val) <= disc.max_current_index:
                 return True
 
         return False
@@ -44,3 +68,7 @@ class Player:
                 return True
 
         return False
+
+    def store_dice_roll_values(self, dice_roll_val):
+        self.dice_rolls[self.dice_roll_index] = dice_roll_val
+        self.dice_roll_index = (self.dice_roll_index + 1) % 3

@@ -80,7 +80,7 @@ class Board:
             for disc in player.discs:
                 # Storing the current position, current id and movement bool of all discs
                 # under each individual players
-                status[player].append((disc.current_pos, disc.current_id, disc.movement))
+                status[player].append((disc.current_pos, disc.current_index, disc.movement))
 
         return status
 

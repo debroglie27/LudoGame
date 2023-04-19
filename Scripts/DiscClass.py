@@ -13,8 +13,8 @@ class Disc:
         self.movement = False
 
         self.disc_id = _id
-        self.current_id = 0
-        self.max_current_id = 56
+        self.current_index = 0
+        self.max_current_index = 56
 
         self.box_collider = pygame.Rect(self.current_pos[0] - self.radius, self.current_pos[1] - self.radius,
                                         2*self.radius, 2*self.radius)
@@ -33,4 +33,4 @@ class Disc:
     def respawn(self):
         self.current_pos = self.initial_pos
         self.movement = False
-        self.current_id = 0
+        self.current_index = 0

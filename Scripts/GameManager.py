@@ -76,57 +76,51 @@ class GameManager:
         # Getting the dice roll value
         self.val = self.dice.roll(self.turn)
 
-        # Bool value representing whether any disc, for that particular player, is at starting position
-        any_disc_at_start_bool = self.Players[self.turn].check_any_disc_at_start()
-        # Bool value representing whether any disc, for that particular player, can move or not
-        disc_movements_bool = self.Players[self.turn].check_disc_movements(self.val)
-
-        # Checking whether the player has any moves available
-        if not any_disc_at_start_bool and disc_movements_bool:
-            # Skipping the player's turn because no moves available
+        # Checking whether all player's discs have reached home
+        if self.Players[self.turn].check_all_player_discs_reached_home():
+            # Skipping the player's turn because the player has already won
             self.turn = (self.turn + 1) % 4
             return
 
         # Storing the dice roll values for player whose turn it was
-        self.Players[self.turn].dice_rolls[self.Players[self.turn].dice_roll_index] = self.val
-        self.Players[self.turn].dice_roll_index = (self.Players[self.turn].dice_roll_index + 1) % 3
+        self.Players[self.turn].store_dice_roll_values(self.val)
+
+        # Update so that player can see the dice roll
+        self.update()
 
         # Checking whether 3 consecutive sixes
         if self.check_3_consecutive_six():
-            # Update so that the changes are visible on the screen
-            self.update()
             # Delay so that the player can see the last six on 3 consecutive sixes
             pygame.time.delay(self.delay)
+            # Restores the status of player before rolling 3 consecutive six
             self.restore_status()
             return
 
-        if (self.val == 6 and any_disc_at_start_bool) or disc_movements_bool:
+        # Checking whether the Player Can move any of its disc according to the dice roll
+        if self.Players[self.turn].check_any_disc_moves_possible(self.val):
             self.roll = False
-        # Player did not Roll 6 and No discs to move currently
         else:
-            # Update so that the changes are visible on the screen
-            self.update()
             # Delay so that the player can notice the roll result
             pygame.time.delay(self.delay)
 
             self.turn = (self.turn + 1) % 4
             self.val = 0
 
-        # Update so that the changes are visible on the screen
-        self.update()
+            # Update so that dice goes to next player
+            self.update()
 
     def disc_move_logic(self):
         # The selected disc to be moved
         disc_selected = self.Players[self.turn].discs[self.Players[self.turn].selected_disc_id]
 
         # Will enter only when the selected disc cannot move and dice roll value is 6
-        if not disc_selected.movement and not (disc_selected.current_id == disc_selected.max_current_id) and self.val == 6:
+        if not disc_selected.movement and not (disc_selected.current_index == disc_selected.max_current_index) and self.val == 6:
             # Initialising the path class which stores all the information
             # regarding which path the disc would follow
             path = PathClass.Path()
 
-            # Selected disc moves to the starting position and here current_id is 0
-            disc_selected.current_pos = path.path_lists[self.turn][disc_selected.current_id]
+            # Selected disc moves to the starting position and here current_index is 0
+            disc_selected.current_pos = path.path_lists[self.turn][disc_selected.current_index]
             # Selected disc's movement ability is made True which was initially False
             disc_selected.movement = True
 
@@ -140,11 +134,11 @@ class GameManager:
             path = PathClass.Path()
 
             # Selected disc's current id and current position gets updated
-            disc_selected.current_id = disc_selected.current_id + self.val
-            disc_selected.current_pos = path.path_lists[self.turn][disc_selected.current_id]
+            disc_selected.current_index = disc_selected.current_index + self.val
+            disc_selected.current_pos = path.path_lists[self.turn][disc_selected.current_index]
 
             # Enter if selected disc has reached Home
-            if disc_selected.current_id == disc_selected.max_current_id:
+            if disc_selected.current_index == disc_selected.max_current_index:
                 disc_selected.movement = False
                 # Giving another rolling chance for making the disc go Home
                 self.roll = True
@@ -209,7 +203,7 @@ class GameManager:
         count_list = [0, 0, 0, 0]
         for index, player in enumerate(self.Players):
             for disc in player.discs:
-                if disc.current_id != disc.max_current_id:
+                if disc.current_index != disc.max_current_index:
                     count_list[index] += 1
 
         if count_list.count(4) == 3:
@@ -228,14 +222,15 @@ class GameManager:
         self.status_index = (self.status_index + 1) % 3
         restore_status = self.status_list[restore_status_index]
 
-        player_discs_restore_val = restore_status[self.Players[self.turn]]
-        # Restoring the current position, current id and movement bool of all discs under particular player
-        for index, disc in enumerate(self.Players[self.turn].discs):
-            disc.current_pos = player_discs_restore_val[index][0]
-            disc.current_id = player_discs_restore_val[index][1]
-            disc.movement = player_discs_restore_val[index][2]
+        # Restoring the current position, current id and movement bool of all discs under all players
+        for player in self.Players:
+            player_discs_restore_val = restore_status[player]
+            for index, disc in enumerate(player.discs):
+                disc.current_pos = player_discs_restore_val[index][0]
+                disc.current_index = player_discs_restore_val[index][1]
+                disc.movement = player_discs_restore_val[index][2]
 
-        # Reinitialising the dice rolls and dice roll index of that particular player
+        # Reinitialising the dice rolls and dice roll index of the player throwing 3 consecutive six
         self.Players[self.turn].dice_rolls = [0, 0, 0]
         self.Players[self.turn].dice_roll_index = 0
 
