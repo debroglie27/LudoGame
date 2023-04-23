@@ -52,10 +52,17 @@ class GameManager:
         # Disc to Eliminate
         self.disc_to_eliminate = None
 
-        # Update so that the changes are visible on the screen
+        # Initialising the path class which stores all the information
+        # regarding which path the disc would follow
+        self.disc_path = PathClass.Path()
+
+        # First Update so that game screen is visible
         self.update()
 
     def update(self):
+        """
+        Updates the game board along with the Players and dice.
+        """
         # Displaying the Game Board
         self.board.display()
 
@@ -73,6 +80,9 @@ class GameManager:
         pygame.display.update()
 
     def dice_roll_logic(self):
+        """
+        Takes care of the logic needed when rolling a die.
+        """
         # Getting the dice roll value
         self.val = self.dice.roll(self.turn)
 
@@ -110,17 +120,16 @@ class GameManager:
             self.update()
 
     def disc_move_logic(self):
+        """
+        Takes care of the logic when player moves a disc.
+        """
         # The selected disc to be moved
         disc_selected = self.Players[self.turn].discs[self.Players[self.turn].selected_disc_id]
 
-        # Will enter only when the selected disc cannot move and dice roll value is 6
+        # Will enter when selected disc cannot move and dice roll value = 6
         if not disc_selected.movement and not (disc_selected.current_index == disc_selected.max_current_index) and self.val == 6:
-            # Initialising the path class which stores all the information
-            # regarding which path the disc would follow
-            path = PathClass.Path()
-
             # Selected disc moves to the starting position and here current_index is 0
-            disc_selected.current_pos = path.path_lists[self.turn][disc_selected.current_index]
+            disc_selected.current_pos = self.disc_path.path_lists[self.turn][disc_selected.current_index]
             # Selected disc's movement ability is made True which was initially False
             disc_selected.movement = True
 
@@ -129,13 +138,9 @@ class GameManager:
             self.val = 0
 
         elif disc_selected.movement:
-            # Initialising the path class which stores all the information
-            # regarding which path the disc would follow
-            path = PathClass.Path()
-
             # Selected disc's current id and current position gets updated
             disc_selected.current_index = disc_selected.current_index + self.val
-            disc_selected.current_pos = path.path_lists[self.turn][disc_selected.current_index]
+            disc_selected.current_pos = self.disc_path.path_lists[self.turn][disc_selected.current_index]
 
             # Enter if selected disc has reached Home
             if disc_selected.current_index == disc_selected.max_current_index:
@@ -172,6 +177,12 @@ class GameManager:
         self.save_status()
 
     def check_elimination(self, disc_selected):
+        """
+        :param disc_selected:
+
+        Returns true if disc_selected eliminates any opponent disc,
+        otherwise Returns false.
+        """
         if disc_selected.current_pos in self.board.safe_positions:
             return False
 
@@ -194,12 +205,18 @@ class GameManager:
         return False
 
     def check_3_consecutive_six(self):
+        """
+        Returns true if player has rolled six 3 times in a row, otherwise false.
+        """
         if self.Players[self.turn].dice_rolls == [6, 6, 6]:
             return True
         else:
             return False
 
     def check_game_over(self):
+        """
+        Returns true if 3 players won the game, otherwise false.
+        """
         count_list = [0, 0, 0, 0]
         for index, player in enumerate(self.Players):
             for disc in player.discs:
@@ -212,11 +229,17 @@ class GameManager:
             return False
 
     def save_status(self):
+        """
+        Saves status of the board.
+        """
         # Saving Status of every disc
         self.status_list[self.status_index] = self.board.current_status()
         self.status_index = (self.status_index + 1) % 3
 
     def restore_status(self):
+        """
+        Restores status of the board where it was 3 dice moves ago.
+        """
         restore_status_index = self.status_index
         # Incrementing status index so that it starts storing new statuses not from the current status
         self.status_index = (self.status_index + 1) % 3
