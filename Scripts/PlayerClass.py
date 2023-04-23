@@ -52,9 +52,9 @@ class Player:
     def check_any_disc_can_move(self, dice_roll_val: int) -> bool:
         """
         :param dice_roll_val:
-        :return bool:
+
         returns True if any player discs has 'movement' bool variable
-        as True and the disc has area to move to, otherwise returns False.
+        as True and the disc has area to move to, otherwise False.
         """
         for disc in self.discs:
             if disc.movement and (disc.current_index + dice_roll_val) <= disc.max_current_index:

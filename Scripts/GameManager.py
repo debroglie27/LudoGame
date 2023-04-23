@@ -180,8 +180,8 @@ class GameManager:
         """
         :param disc_selected:
 
-        Returns true if disc_selected eliminates any opponent disc,
-        otherwise Returns false.
+        Returns True if disc_selected eliminates any opponent disc,
+        otherwise Returns False.
         """
         if disc_selected.current_pos in self.board.safe_positions:
             return False
@@ -206,7 +206,8 @@ class GameManager:
 
     def check_3_consecutive_six(self):
         """
-        Returns true if player has rolled six 3 times in a row, otherwise false.
+        Returns True if player has rolled six 3 times in a row,
+        otherwise False.
         """
         if self.Players[self.turn].dice_rolls == [6, 6, 6]:
             return True
@@ -215,7 +216,7 @@ class GameManager:
 
     def check_game_over(self):
         """
-        Returns true if 3 players won the game, otherwise false.
+        Returns True if 3 players won the game, otherwise False.
         """
         count_list = [0, 0, 0, 0]
         for index, player in enumerate(self.Players):
