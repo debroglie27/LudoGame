@@ -126,8 +126,8 @@ class GameManager:
         # The selected disc to be moved
         disc_selected = self.Players[self.turn].discs[self.Players[self.turn].selected_disc_id]
 
-        # Will enter when selected disc cannot move and dice roll value = 6
-        if not disc_selected.movement and not (disc_selected.current_index == disc_selected.max_current_index) and self.val == 6:
+        # Will enter when selected disc is at start and dice roll value = 6
+        if self.Players[self.turn].check_disc_at_start(disc_selected) and self.val == 6:
             # Selected disc moves to the starting position and here current_index is 0
             disc_selected.current_pos = self.disc_path.path_lists[self.turn][disc_selected.current_index]
             # Selected disc's movement ability is made True which was initially False

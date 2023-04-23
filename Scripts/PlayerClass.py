@@ -10,7 +10,7 @@ class Player:
 
         self.discs = []
 
-        self.selected_disc_id = -1
+        self.selected_disc_id = None
 
         for _id, initial_pos in enumerate(self.initial_pos_list):
             disc = DiscClass.Disc(self.window, self.color, self.radius, initial_pos, _id)
@@ -53,7 +53,7 @@ class Player:
         """
         :param dice_roll_val:
 
-        returns True if any player discs has 'movement' bool variable
+        Returns True if any player discs has 'movement' bool variable
         as True and the disc has area to move to, otherwise False.
         """
         for disc in self.discs:
@@ -68,6 +68,13 @@ class Player:
                 return True
 
         return False
+
+    @staticmethod
+    def check_disc_at_start(disc_to_be_checked):
+        if disc_to_be_checked.current_index == 0:
+            return True
+        else:
+            return False
 
     def store_dice_roll_values(self, dice_roll_val):
         self.dice_rolls[self.dice_roll_index] = dice_roll_val
