@@ -83,17 +83,20 @@ class GameManager:
         """
         Takes care of the logic needed when rolling a die.
         """
+        # The Player whose turn it is
+        current_player = self.Players[self.turn]
+
         # Getting the dice roll value
         self.val = self.dice.roll(self.turn)
 
         # Checking whether all player's discs have reached home
-        if self.Players[self.turn].check_all_player_discs_reached_home():
+        if current_player.check_all_player_discs_reached_home():
             # Skipping the player's turn because the player has already won
             self.turn = (self.turn + 1) % 4
             return
 
         # Storing the dice roll values for player whose turn it was
-        self.Players[self.turn].store_dice_roll_values(self.val)
+        current_player.store_dice_roll_values(self.val)
 
         # Update so that player can see the dice roll
         self.update()
@@ -107,7 +110,7 @@ class GameManager:
             return
 
         # Checking whether the Player Can move any of its disc according to the dice roll
-        if self.Players[self.turn].check_any_disc_moves_possible(self.val):
+        if current_player.check_any_disc_moves_possible(self.val):
             self.roll = False
         else:
             # Delay so that the player can notice the roll result
@@ -123,11 +126,14 @@ class GameManager:
         """
         Takes care of the logic when player moves a disc.
         """
+        # The Player whose turn it is
+        current_player = self.Players[self.turn]
+
         # The selected disc to be moved
-        disc_selected = self.Players[self.turn].discs[self.Players[self.turn].selected_disc_id]
+        disc_selected = current_player.discs[current_player.selected_disc_id]
 
         # Will enter when selected disc is at start and dice roll value = 6
-        if self.Players[self.turn].check_disc_at_start(disc_selected) and self.val == 6:
+        if current_player.check_disc_at_start(disc_selected) and self.val == 6:
             # Selected disc moves to the starting position and here current_index is 0
             disc_selected.current_pos = self.disc_path.path_lists[self.turn][disc_selected.current_index]
             # Selected disc's movement ability is made True which was initially False
@@ -144,16 +150,7 @@ class GameManager:
 
             # Enter if selected disc has reached Home
             if disc_selected.current_index == disc_selected.max_current_index:
-                disc_selected.movement = False
-                # Giving another rolling chance for making the disc go Home
-                self.roll = True
-                self.val = 0
-                # Update so that the changes are visible on the screen
-                self.update()
-
-                if self.check_game_over():
-                    self.game_over = True
-
+                self.disc_moves_at_home_logic(disc_selected, current_player)
                 return
 
             # Checking whether the selected disc eliminated some other disc
@@ -264,3 +261,26 @@ class GameManager:
 
         # Update so that the changes are visible on the screen
         self.update()
+
+    def disc_moves_at_home_logic(self, disc_selected, current_player):
+        """
+        :param disc_selected:
+        :param current_player:
+
+        Takes care of all the possibilities that may arise when a disc moves to home.
+        """
+        disc_selected.movement = False
+
+        if current_player.check_all_disc_at_home():
+            # Not giving another rolling chance because player has won
+            self.turn = self.turn = (self.turn + 1) % 4
+        else:
+            # Giving another rolling chance for making the disc go Home
+            self.roll = True
+
+        self.val = 0
+        # Update so that the changes are visible on the screen
+        self.update()
+
+        if self.check_game_over():
+            self.game_over = True

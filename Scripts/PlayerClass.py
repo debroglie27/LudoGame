@@ -76,6 +76,13 @@ class Player:
         else:
             return False
 
+    def check_all_disc_at_home(self):
+        for disc in self.discs:
+            if disc.current_index != disc.max_current_index:
+                return False
+
+        return True
+
     def store_dice_roll_values(self, dice_roll_val):
         self.dice_rolls[self.dice_roll_index] = dice_roll_val
         self.dice_roll_index = (self.dice_roll_index + 1) % 3
