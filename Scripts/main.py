@@ -26,7 +26,7 @@ def run_game():
                 elif not gameManager.roll and gameManager.Players[gameManager.turn].collide_point(mouse_pos):
                     gameManager.disc_move_logic()
 
-        # If 3 Players Win
+        # If Game is Over
         if gameManager.game_over:
             # Delay so that they know the game is over
             pygame.time.delay(3000)

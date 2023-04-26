@@ -116,6 +116,7 @@ class GameManager:
             # Delay so that the player can notice the roll result
             pygame.time.delay(self.delay)
 
+            # Changing the turn for the next player
             self.turn = (self.turn + 1) % 4
             self.val = 0
 
